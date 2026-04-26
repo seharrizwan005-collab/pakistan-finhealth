@@ -1,0 +1,117 @@
+@model WebProject.Models.Bank
+@{
+    ViewData["Title"] = "Bank Details";
+    var ratios = ViewBag.Ratios as List<WebProject.Models.FinancialRatio>;
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>@Model.BankName - Pakistan FinHealth</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body { background-color: #f0f2f5; }
+        .header {
+            background-color: #1a5276;
+            color: white;
+            padding: 20px;
+            margin-bottom: 30px;
+        }
+        .ratio-card {
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="container">
+            <div class="d-flex justify-content-between align-items-center">
+                <h2> @Model.BankName</h2>
+                <div>
+                    <a href="/Bank/Index" class="btn btn-outline-light btn-sm me-2">← Back to Banks</a>
+                    <a href="/Auth/Logout" class="btn btn-outline-light btn-sm">Logout</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="card ratio-card mb-4">
+            <div class="card-body">
+                <h5>Bank Information</h5>
+                <p><strong>Type:</strong> @Model.BankType</p>
+                <p><strong>Established:</strong> @Model.EstablishedYear</p>
+                <p><strong>Status:</strong> @(Model.IsActive ? "Active" : "Inactive")</p>
+            </div>
+        </div>
+
+        <h4 class="mb-3">Financial Ratios</h4>
+
+        @if (ratios != null && ratios.Any())
+        {
+            <div class="card ratio-card mb-4">
+                <div class="card-body">
+                    <canvas id="ratioChart" height="100"></canvas>
+                </div>
+            </div>
+
+            <table class="table table-striped bg-white rounded">
+                <thead class="table-dark">
+                    <tr>
+                        <th>Ratio Name</th>
+                        <th>Category</th>
+                        <th>Value</th>
+                        <th>Year</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var ratio in ratios)
+                    {
+                        <tr>
+                            <td>@ratio.RatioName</td>
+                            <td>@ratio.RatioCategory?.CategoryName</td>
+                            <td>@ratio.RatioValue%</td>
+                            <td>@ratio.Year</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+        else
+        {
+            <div class="alert alert-info">No financial ratios available for this bank.</div>
+        }
+    </div>
+
+    <script>
+    var ratios = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(
+        ratios?.Select(r => new { ratioName = r.RatioName, ratioValue = r.RatioValue, year = r.Year })
+        ?? Enumerable.Empty<object>()
+    ));
+
+    var ctx = document.getElementById('ratioChart').getContext('2d');
+    new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: ratios.map(r => r.ratioName + ' (' + r.year + ')'),
+            datasets: [{
+                label: 'Ratio Value (%)',
+                data: ratios.map(r => r.ratioValue),
+                backgroundColor: '#1a5276',
+                borderRadius: 5
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: { position: 'top' }
+            }
+        }
+    });
+</script>
+</body>
+</html>

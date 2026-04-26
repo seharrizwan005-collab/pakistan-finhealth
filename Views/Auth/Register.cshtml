@@ -1,0 +1,68 @@
+@{
+    ViewData["Title"] = "Register";
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Register - Pakistan FinHealth</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <style>
+        body {
+            background-color: #f0f2f5;
+        }
+        .register-card {
+            max-width: 400px;
+            margin: 80px auto;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            background: white;
+        }
+        .register-title {
+            text-align: center;
+            color: #1a5276;
+            margin-bottom: 25px;
+            font-weight: bold;
+        }
+        .btn-register {
+            background-color: #1a5276;
+            color: white;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <div class="register-card">
+        <h2 class="register-title"> Pakistan FinHealth</h2>
+        <h5 class="text-center mb-4">Create Account</h5>
+
+        @if (ViewBag.Error != null)
+        {
+            <div class="alert alert-danger">@ViewBag.Error</div>
+        }
+
+        <form method="post" action="/Auth/Register">
+            <div class="mb-3">
+                <label>Full Name</label>
+                <input type="text" name="fullName" class="form-control" required />
+            </div>
+            <div class="mb-3">
+                <label>Email</label>
+                <input type="email" name="email" class="form-control" required />
+            </div>
+            <div class="mb-3">
+                <label>Password</label>
+                <input type="password" name="password" class="form-control" required />
+            </div>
+            <button type="submit" class="btn btn-register">Register</button>
+        </form>
+
+        <p class="text-center mt-3">
+            Already have an account? <a href="/Auth/Login">Login here</a>
+        </p>
+    </div>
+</body>
+</html>

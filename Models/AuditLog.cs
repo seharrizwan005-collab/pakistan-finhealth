@@ -1,7 +1,10 @@
+using System.ComponentModel.DataAnnotations;
+
 namespace WebProject.Models
 {
     public class AuditLog
     {
+        [Key]
         public int LogID { get; set; }
         public int UserID { get; set; }
         public string Action { get; set; }

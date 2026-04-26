@@ -1,0 +1,69 @@
+@model List<WebProject.Models.Bank>
+@{
+    ViewData["Title"] = "Banks";
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Banks - Pakistan FinHealth</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <style>
+        body { background-color: #f0f2f5; }
+        .header {
+            background-color: #1a5276;
+            color: white;
+            padding: 20px;
+            margin-bottom: 30px;
+        }
+        .bank-card {
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+            transition: transform 0.2s;
+        }
+        .bank-card:hover {
+            transform: translateY(-5px);
+        }
+        .badge-commercial { background-color: #1a5276; }
+        .badge-islamic { background-color: #1e8449; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="container">
+            <div class="d-flex justify-content-between align-items-center">
+                <h2>Pakistan FinHealth Monitor</h2>
+                <div>
+                    <span class="me-3">Welcome, @Context.Session.GetString("UserName")</span>
+                    <a href="/Auth/Logout" class="btn btn-outline-light btn-sm">Logout</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <h4 class="mb-4">Pakistani Banks</h4>
+        <div class="row">
+            @foreach (var bank in Model)
+            {
+                <div class="col-md-4">
+                    <div class="card bank-card">
+                        <div class="card-body">
+                            <h5 class="card-title">@bank.BankName</h5>
+                            <span class="badge @(bank.BankType == "Islamic" ? "badge-islamic" : "badge-commercial") text-white">
+                                @bank.BankType
+                            </span>
+                            <p class="mt-2 text-muted">Established: @bank.EstablishedYear</p>
+                            <a href="/Bank/Details/@bank.BankID" class="btn btn-primary btn-sm mt-2">
+                                View Ratios →
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</body>
+</html>

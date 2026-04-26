@@ -1,7 +1,10 @@
+using System.ComponentModel.DataAnnotations;
+
 namespace WebProject.Models
 {
     public class FinancialRatio
     {
+        [Key]
         public int RatioID { get; set; }
         public int BankID { get; set; }
         public int CategoryID { get; set; }
